@@ -1,10 +1,10 @@
 import random
 
-word_list = ['somebody', 'once', 'told', 'me', 'the', 'world', 'is', 'gonna', 'roll', 'me']
-
 def get_word():
-    return random.choice(word_list)
-    
+  with open('word_list.txt', 'r', encoding='utf-8') as file:
+    word_list=file.read().split()
+  return random.choice(word_list)
+
 def print_word(word_, list_):
     for c in word_:
         if c in list_:
