@@ -1,144 +1,45 @@
-import random
+target_word = 'коробка'
+tries = 6
+guessed_letters = []
 
-def get_word():
-  with open('word_list.txt', 'r', encoding='utf-8') as file:
-    word_list=file.read().split()
-  return random.choice(word_list)
 
-def print_word(word_, list_):
-    for c in word_:
-        if c in list_:
-            print(c, end=' ')
-        else:
-            print('_', end=' ')
-    print()
-    
+def is_word(x):
+    return len(x) > 1
 
-def play(word):
-    word_completion = '_ ' * len(word)  
-    guessed = False                    
-    guessed_letters = []               
-    guessed_words = []                 
-    tries = 6                          
-    print("Let's play!")
-    print(display_hangman(tries))
-    print(word_completion)
+
+def get_input():
     while True:
-        word_input = input('Enter a letter or word: ').upper()
-        if not word_input.isalpha():
-            print("it's not a letter, try again")
-            continue
-        if word_input in guessed_words or word_input in guessed_letters:
-            print("this letter has already been")
-            continue
-        if len(word_input) > 1:
-            if word_input == word:
-                print('Congratulations! You won!')
-                break
-            else:
-                guessed_words.append(word_input)
-                tries -= 1
-                print(f'Wrong, attempts left: {tries}')
-                print(display_hangman(tries))
-                print_word(word, guessed_letters)
-                if tries == 0:
-                    print(f'You failed to guess the word: {word}')
-                    break
-                continue
+        letter_or_word = input()
+        if is_word(letter_or_word):
+            return letter_or_word
+
+        if letter_or_word not in guessed_letters:
+            break
+
+    return letter_or_word
 
 
+while tries > 0:
+    word_or_letter = get_input()
 
-        if word_input in word:
-            guessed_letters.append(word_input)
-            for c in word:
-                if c not in guessed_letters:
-                    print('You guessed the letter')
-                    print_word(word, guessed_letters)
-                    guessed = False
-                    break
-                guessed = True
-            if guessed:    
-                print_word(word, guessed_letters)
-                print('Congratulations! You won!')
+    if is_word(word_or_letter):
+        word = word_or_letter
+
+        if word == target_word:
+            print('end')
+            break
+        else:
+            tries -= 1
+    else:
+        letter = word_or_letter
+
+        if letter in target_word:
+            guessed_letters.append(letter)
+            if set(target_word) == set(guessed_letters):
+                print("end")
                 break
         else:
-            guessed_letters.append(word_input)
             tries -= 1
-            print(f'Wrong, attempts left: {tries}')
-            print(display_hangman(tries))
-            print_word(word, guessed_letters)
-        if tries == 0:
-            print(f'You failed to guess the word: {word}')
-            break
-            
-    
-def display_hangman(tries):
-    stages = [
-                '''
-                _______
-                |     |
-                |     O
-                |    \|/
-                |     |
-                |    / \
-                |
-                |  oopsy
-                
-                ''',
-                '''
-                _______
-                |     |
-                |     O
-                |    \|/
-                |     |
-                |    / 
-                |  
-                ''',
-                '''
-                _______
-                |     |
-                |     O
-                |    \|/
-                |     |
-                |    
-                |  
-                ''',
-                '''
-                _______
-                |     |
-                |     O
-                |    \|
-                |     |
-                |    
-                |  
-                ''',
-                '''
-                _______
-                |     |
-                |     O
-                |     |
-                |     |
-                |     
-                |  
-                ''',
-                '''
-                _______
-                |     |
-                |     O
-                |    
-                |     
-                |    
-                |  
-                ''',
-                '''
-                _______
-                |     |
-                |     
-                |    
-                |       
-                |  
-                '''
-    ]
-    return stages[tries]
 
-play(get_word().upper())    
+if tries == 0:
+    print("dead end")
