@@ -1,8 +1,9 @@
 import random
 
+
 def get_word():
     with open('word_list.txt', 'r', encoding='utf-8') as file:
-      word_list=file.read().split()
+        word_list = file.read().split()
     return random.choice(word_list)
 
 
@@ -35,19 +36,27 @@ def get_input(guessed_letters):
             break
         else:
             print("this letter has already been")
-            
+
     return letter_or_word
 
 
+def display_end(tries, target_word):
+    display_hangman(tries)
+    print_word(target_word, target_word)
+    if tries == 0:
+        print('Dead end')
+    else:
+        print('Congrats')
+
+
 def play(target_word):
-    tries = 6 
-    guessed_letters = [] 
-                         
+    tries = 6
+    guessed_letters = []
+
     print("Let's play!")
 
     while tries > 0:
-
-        print(display_hangman(tries))
+        display_hangman(tries)
         print_word(target_word, guessed_letters)
 
         word_or_letter = get_input(guessed_letters)
@@ -56,7 +65,6 @@ def play(target_word):
             word = word_or_letter
 
             if word == target_word:
-                print('end')
                 break
             else:
                 tries -= 1
@@ -67,14 +75,11 @@ def play(target_word):
                 guessed_letters.append(letter)
 
                 if set(target_word) == set(guessed_letters):
-                    print("end")
                     break
             else:
                 tries -= 1
-                
-    if tries == 0:
-        print(display_hangman(0))
-        print("dead end")
+
+    display_end(tries, target_word)
 
 
 def display_hangman(tries_):
@@ -144,7 +149,7 @@ def display_hangman(tries_):
                 |  
                 '''
     ]
-    return stages[tries_]
+    print(stages[tries_])
 
 
-play(get_word().upper())  
+play(get_word().upper())
