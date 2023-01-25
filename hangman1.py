@@ -6,7 +6,6 @@ def get_word():
     return random.choice(word_list)
 
 
-
 def print_word(word_, list_):
     for c in word_:
         if c in list_:
@@ -14,7 +13,6 @@ def print_word(word_, list_):
         else:
             print('_', end=' ')
     print()
-
 
 
 def is_word(x):
@@ -38,7 +36,6 @@ def get_input(guessed_letters):
         else:
             print("this letter has already been")
             
-
     return letter_or_word
 
 
@@ -47,7 +44,6 @@ def play(target_word):
     guessed_letters = [] 
                          
     print("Let's play!")
-
 
     while tries > 0:
 
@@ -69,14 +65,17 @@ def play(target_word):
 
             if letter in target_word:
                 guessed_letters.append(letter)
+
                 if set(target_word) == set(guessed_letters):
                     print("end")
                     break
             else:
                 tries -= 1
-
+                
     if tries == 0:
+        print(display_hangman(0))
         print("dead end")
+
 
 def display_hangman(tries_):
     stages = [
@@ -86,7 +85,7 @@ def display_hangman(tries_):
                 |     O
                 |    \|/
                 |     |
-                |    / \
+                |    / \\
                 |
                 |  oopsy
                 
