@@ -2,9 +2,21 @@ import random
 import requests
 import json
 import os
+import argparse
 
 
-def get_word():
+def get_word_mode():
+    modes = {'api': get_word_api,
+            'file': get_word_from_file,
+            'insane': insane_mode
+            }
+    parser = argparse.ArgumentParser(description='Choose mode')
+    parser.add_argument('-m', '--mode', type=str, choices=list(modes.keys()), default='api', help='Choose mode: api - to get word from API; file - to get word from txt file, insane - insane mode')
+    args = parser.parse_args()
+    return modes[args.mode]
+
+
+def get_word_api():
     if 'RANDOM_WORD_API_KEY' not in os.environ:
         raise RuntimeError('API key is not set')
     api_key = os.environ['RANDOM_WORD_API_KEY']
@@ -173,6 +185,7 @@ def display_hangman(tries_):
 
 
 try:
+    get_word = get_word_mode()
     play(get_word().upper())
 except RuntimeError as e:
     print(e)
