@@ -1,7 +1,19 @@
 import random
+import requests
+import json
+import os
 
 
 def get_word():
+    if 'RANDOM_WORD_API_KEY' not in os.environ:
+        raise RuntimeError('API key is not set')
+    api_key = os.environ['RANDOM_WORD_API_KEY']
+    api_url = 'https://api.api-ninjas.com/v1/randomword'
+    response = requests.get(api_url, params={'type': 'noun'}, headers={'X-Api-Key': api_key})
+    output = json.loads(response.text)
+    return output['word']
+
+def get_word_from_file():
     with open('word_list.txt', 'r', encoding='utf-8') as file:
         word_list = file.read().split()
     return random.choice(word_list)
@@ -152,4 +164,8 @@ def display_hangman(tries_):
     print(stages[tries_])
 
 
-play(get_word().upper())
+try:
+    play(get_word().upper())
+except RuntimeError as e:
+    print(e)
+    exit(1)
