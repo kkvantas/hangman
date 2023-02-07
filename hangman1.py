@@ -13,6 +13,14 @@ def get_word():
     output = json.loads(response.text)
     return output['word']
 
+
+def insane_mode():
+    api_url = 'https://www.thisworddoesnotexist.com/api/random_word.json'
+    response = requests.get(api_url)
+    output = json.loads(response.content)
+    return output['word']['word']
+
+
 def get_word_from_file():
     with open('word_list.txt', 'r', encoding='utf-8') as file:
         word_list = file.read().split()
