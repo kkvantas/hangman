@@ -3,17 +3,25 @@ import requests
 import json
 import os
 import argparse
+import re
 
 
 def get_word_mode():
     modes = {'api': get_word_api,
             'file': get_word_from_file,
-            'insane': insane_mode
+            'insane': insane_mode,
+             'wd': word_of_the_day
             }
     parser = argparse.ArgumentParser(description='Choose mode')
-    parser.add_argument('-m', '--mode', type=str, choices=list(modes.keys()), default='api', help='Choose mode: api - to get word from API; file - to get word from txt file, insane - insane mode')
+    parser.add_argument('-m', '--mode', type=str, choices=list(modes.keys()), default='api', help='Choose mode: api - to get word from API; file - to get word from txt file, insane - insane mode, wd - word of the day')
     args = parser.parse_args()
     return modes[args.mode]
+
+def word_of_the_day():
+    wd_url = 'https://www.dictionary.com/e/word-of-the-day/'
+    response = requests.get(wd_url)
+    match = re.search(r'<h1 class=\"js-fit-text\" style=\"color: #00248B\">(\w+)</h1>', response.text)
+    return match.group(1)
 
 
 def get_word_api():
