@@ -18,10 +18,16 @@ def get_word_mode():
     return modes[args.mode]
 
 def word_of_the_day():
-    wd_url = 'https://www.dictionary.com/e/word-of-the-day/'
-    response = requests.get(wd_url)
-    match = re.search(r'<h1 class=\"js-fit-text\" style=\"color: #00248B\">(\w+)</h1>', response.text)
-    return match.group(1)
+    try:
+        wd_url = 'https://www.dictionary.com/e/word-of-the-day/'
+        response = requests.get(wd_url)
+        match = re.search(r'<h1 class="js-fit-text" style="color: #\S{6}">(\w+)</h1>', response.text)
+        if match is None:
+            raise RuntimeError('Sorry, original source has been changed, pls try other mode')
+        return match.group(1)
+    except RuntimeError as err:
+        print(err)
+        exit(1)
 
 
 def get_word_api():
